@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
+
+const authRoutes = require('./routes/auth');
+
 // Connecting to DB
 const mongoose = require('mongoose');
 mongoose
@@ -20,10 +23,14 @@ mongoose
     process.exit(1); // Stop everything
   });
 
-// using 3rd party middlewares
+// using 3rd party Middlewares
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors())
+app.use(cors());
 
+// My Routes
+app.use('/api/auth', authRoutes);
+
+// Port & Starting server
 const port = process.env.PORT || 8000;
 app.listen(8000, () => console.log(`Server is up & running at port: ${port}`));
