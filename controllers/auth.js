@@ -85,5 +85,24 @@ exports.signout = (req, res) => {
 };
 
 // isLoggedIn
-exports.isSignedIn = expressJwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] })
+exports.isSignedIn = expressJwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'], userProperty: 'auth' })
+
 // middlewares
+exports.isAuthenticated = (req, res, next) => {
+    if(req.profile && req.auth && req.profile._id == req.auth._id){
+        next();
+    }else{
+        return res.status(403).json({
+            error: 'Access Denied!'
+        });
+    }
+};
+
+exports.isAdmin = (req, res, next) => {
+    if(req.profile.role === 0){
+        return res.status(403).json({
+            error: 'You are NOT Admin!'
+        });
+    }
+    next();
+};
