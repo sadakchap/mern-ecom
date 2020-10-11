@@ -83,3 +83,7 @@ exports.signout = (req, res) => {
         message: "User Signout"
     });
 };
+
+// isLoggedIn
+exports.isSignedIn = expressJwt({ secret: process.env.JWT_SECRET, algorithms: ['HS256'] })
+// middlewares
