@@ -76,7 +76,9 @@ exports.signup = (req, res) => {
     });
 };
 
+// clearing the cookies
 exports.signout = (req, res) => {
+    res.clearCookie("token");
     res.json({
         message: "User Signout"
     });
