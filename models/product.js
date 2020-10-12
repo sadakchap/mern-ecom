@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema({
         default: 0
     },
     photo: {
-        type: Buffer,
+        data: Buffer,
         contentType: String
     }
 }, { timestamps: true });

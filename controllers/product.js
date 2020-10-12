@@ -1,0 +1,79 @@
+const Product = require('../models/product');
+const formidable = require('formidable');
+const _ = require('lodash');
+const fs = require('fs');
+
+exports.getProductById = (req, res, next, id) => {
+    Product.findById(id)
+        .populate("category")
+        .exec((err, product) => {
+        if(err || !product){
+            return res.status(400).json({
+                error: 'Could not find the product by ID'
+            });
+        }
+        req.product = product;
+        next();
+    });
+};
+
+exports.getProduct = (req, res) => {
+    return res.json(req.product);
+};
+
+exports.getAllProducts = (req, res) => {
+    Product.find().exec((err, products) => {
+        if(err || !products){
+            return res.status(404).json({
+                error: 'No products in DB!'
+            });
+        }
+        return res.status(200).json(products);
+    });
+};
+
+exports.createProduct = (req, res) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+
+    form.parse(req, (err, fields, file) => {
+        if(err){
+            return res.status(400).json({
+                error: `problem with image: ${err.message}`
+            });
+        }
+        const { name, price, desc, stock, category } = fields;
+        if(!name || !price || !desc || !stock || !category){
+            return res.status(400).json({ error: 'please provide all fields '});
+        }
+        
+        // TODO: restrictions on fields
+        let product = new Product(fields);
+
+        // handle file
+        if(file.photo){
+            if(file.photo.size > 3000000){
+                return res.status(400).json({ error: 'file size too big' });
+            }
+            product.photo.data = fs.readFileSync(file.photo.path);
+            product.photo.contentType = file.photo.type;
+        }
+
+        // saving product
+        product.save((err, savedProduct) => {
+            if(err || !savedProduct){
+                return res.status(400).json({ error: 'saving product in DB failed' });
+            }
+            return res.status(200).json(savedProduct);
+        });
+
+    });
+};
+
+exports.updateProduct = (req, res) => {
+
+};
+
+exports.removeProduct = (req, res) => {
+
+};
