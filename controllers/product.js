@@ -18,6 +18,7 @@ exports.getProductById = (req, res, next, id) => {
 };
 
 exports.getProduct = (req, res) => {
+    res.product.photo = undefined;
     return res.json(req.product);
 };
 
@@ -77,3 +78,12 @@ exports.updateProduct = (req, res) => {
 exports.removeProduct = (req, res) => {
 
 };
+
+// middleware
+exports.photo = (req, res, next) => {
+    if(req.product.photo.data){
+        res.set("Content-Type", req.product.photo.contentType);
+        return res.send(req.product.photo.data);
+    }
+    next();
+}
