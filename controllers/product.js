@@ -2,6 +2,7 @@ const Product = require('../models/product');
 const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
+const { sortBy } = require('lodash');
 
 exports.getProductById = (req, res, next, id) => {
     Product.findById(id)
@@ -23,7 +24,15 @@ exports.getProduct = (req, res) => {
 };
 
 exports.getAllProducts = (req, res) => {
-    Product.find().exec((err, products) => {
+    let limit = req.query.limit ? parseInt(req.query.limit) : 8;
+    let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
+
+    Product.find()
+    .select('-photo')
+    .populate("category")
+    .sort([[sortBy, "asc"]])  // .sort([["createdAt", "asc"]])
+    .limit(limit)
+    .exec((err, products) => {
         if(err || !products){
             return res.status(404).json({
                 error: 'No products in DB!'
