@@ -71,12 +71,48 @@ exports.createProduct = (req, res) => {
     });
 };
 
-exports.updateProduct = (req, res) => {
+exports.updateProduct = (req, res) => {   
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
 
+    form.parse(req, (err, fields, file) => {
+        if(err){
+            return res.status(400).json({
+                error: `problem with image: ${err.message}`
+            });
+        }
+        
+        let product = req.product;
+        product = _.extend(product, fields);
+
+        // handle file
+        if(file.photo){
+            if(file.photo.size > 3000000){
+                return res.status(400).json({ error: 'file size too big' });
+            }
+            product.photo.data = fs.readFileSync(file.photo.path);
+            product.photo.contentType = file.photo.type;
+        }
+
+        // saving product
+        product.save((err, updatedProduct) => {
+            if(err || !updatedProduct){
+                return res.status(400).json({ error: 'updation of product in DB failed' });
+            }
+            return res.status(200).json(updatedProduct);
+        });
+
+    });
 };
 
 exports.removeProduct = (req, res) => {
-
+    const product = req.product;
+    product.remove((err, removedProduct) => {
+        if(err){
+            return res.status(400).json({ error: 'Cannot remove the product' });
+        }
+        return res.status(200).json({ message: `${removedProduct.name} Product removed successfully!` });
+    });
 };
 
 // middleware

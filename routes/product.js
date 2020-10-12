@@ -11,6 +11,8 @@ router.param('userId', getUserById);
 // get routes
 router.get('/product/:productId', getProduct);
 router.get('/product/photo/:productId', photo);
+
+// get listing route
 router.get('/products', getAllProducts);
 
 // create route
