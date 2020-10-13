@@ -124,6 +124,15 @@ exports.removeProduct = (req, res) => {
     });
 };
 
+exports.getAllUniqueCategory = (req, res) => {
+    Product.distinct("category", {}, (err, category) => {
+        if(err){
+            return res.status(400).json({ error: 'No category found!' });
+        }
+        return res.status(200).json(category)
+    })
+}
+
 // middleware
 exports.photo = (req, res, next) => {
     if(req.product.photo.data){
