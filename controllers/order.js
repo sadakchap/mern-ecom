@@ -23,3 +23,13 @@ exports.createOrder = (req, res) => {
     });
 };
 
+exports.getAllOrders = (req, res) => {
+    Order.find()
+    .populate("user", "_id name")
+    .exec((err, orders) => {
+        if(err || !orders){
+            return res.status(400).json({ error: 'no orders in DB'} );
+        }
+        res.status(200).json(orders);
+    });
+};
