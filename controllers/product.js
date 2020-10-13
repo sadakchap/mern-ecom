@@ -159,3 +159,9 @@ exports.updateStock = (req, res, next) => {
         next();
     })
 };
+
+
+// other way of storing photos -
+// 1) store images in firebase/s3 bucket
+// 2) then, in model field store its url string
+// Note: for more info watch https://www.youtube.com/watch?v=srPXMt1Q0nY&list=LL&index=1
