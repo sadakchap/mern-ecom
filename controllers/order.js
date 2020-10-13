@@ -11,3 +11,15 @@ exports.getOrderById = (req, res, next, id) => {
         next();
     });
 };
+
+exports.createOrder = (req, res) => {
+    req.body.order.user = req.profile;
+    const order = new Order(req.body.order);
+    order.save((err, savedOrder) => {
+        if(err || !savedOrder){
+            return res.status(400).json({ error: 'Can not crete new order!' });
+        }
+        return res.status(200).json(savedOrder);
+    });
+};
+
