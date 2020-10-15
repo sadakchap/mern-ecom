@@ -61,20 +61,21 @@ exports.signup = (req, res) => {
         return res.status(400).json({ error: customErrorArray });
     }
     
-    const user = new User(req.body);
     // check for unique email
-    User.find({ email: req.body.email }).exec((err, user) => {
+    User.findOne({ email: req.body.email }).exec((err, user) => {
         if(err){
             return res.status(400).json({
                 error: 'Error while checking for duplicate email'
             });
         }
+        
         if(user){
-            console.log(`user already exists`);
+            console.log(`user already exists ${user.email}`);
             return res.status(400).json({
-                error: 'Sorry, that email is already taken.'
+                error: 'Sorry, this email is already taken.'
             })
         }else{
+            const user = new User(req.body);
             user.save((err, user) => {
                 if(err){
                     return res.status(400).json({
