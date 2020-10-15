@@ -58,22 +58,38 @@ exports.signup = (req, res) => {
         errors.array().forEach(err => {
             customErrorArray.push({ name: err.param, msg: err.msg });
         });
-        return res.status(400).json({ errors: customErrorArray });
+        return res.status(400).json({ error: customErrorArray });
     }
     
     const user = new User(req.body);
-    user.save((err, user) => {
+    // check for unique email
+    User.find({ email: req.body.email }).exec((err, user) => {
         if(err){
             return res.status(400).json({
-                error: err.message
+                error: 'Error while checking for duplicate email'
             });
         }
-        return res.status(200).json({
-            name: user.name,
-            email: user.email,
-            id: user._id
-        });
+        if(user){
+            console.log(`user already exists`);
+            return res.status(400).json({
+                error: 'Sorry, that email is already taken.'
+            })
+        }else{
+            user.save((err, user) => {
+                if(err){
+                    return res.status(400).json({
+                        error: err.message
+                    });
+                }
+                return res.status(200).json({
+                    name: user.name,
+                    email: user.email,
+                    id: user._id
+                });
+            });
+        }
     });
+
 };
 
 // clearing the cookies
