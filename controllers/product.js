@@ -19,7 +19,7 @@ exports.getProductById = (req, res, next, id) => {
 };
 
 exports.getProduct = (req, res) => {
-    res.product.photo = undefined;
+    req.product.photo = undefined;
     return res.json(req.product);
 };
 
