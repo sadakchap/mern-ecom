@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-
+const morgan = require('morgan');
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -31,6 +31,9 @@ mongoose
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
+if(process.env.NODE_ENV === 'development'){
+  app.use(morgan("dev"));
+}
 
 // My Routes
 app.use('/api', authRoutes);
