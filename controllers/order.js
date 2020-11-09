@@ -17,6 +17,7 @@ exports.createOrder = (req, res) => {
     const order = new Order(req.body.order);
     order.save((err, savedOrder) => {
         if(err || !savedOrder){
+            console.log(err);
             return res.status(400).json({ error: 'Can not crete new order!' });
         }
         return res.status(200).json(savedOrder);

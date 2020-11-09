@@ -19,7 +19,8 @@ mongoose
   .connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_USER_PASSWORD}@tick.jm1v9.mongodb.net/${process.env.DB_NAME}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
   })
   .then((conn) => console.log(`DB CONNECTED at PORT: ${conn.connection.port}`))
   .catch((err) => {

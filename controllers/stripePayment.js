@@ -5,6 +5,7 @@ exports.makeStripePayment = (req, res) => {
     const { products, token } = req.body;
     let totalAmount = 0;
     totalAmount = products.reduce((amount, prod) => amount + parseInt(prod.price), 0);
+    console.log(totalAmount);
     const idempotencyKey = uuidv4();
 
     return stripe.customers.create({
@@ -16,14 +17,14 @@ exports.makeStripePayment = (req, res) => {
             currency: 'usd',
             customer: customer.id,
             receipt_email: token.email
-        }, { idempotencyKey })
-    }).then(result => {
-        return res.status(200).json(result);
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: 'Sorry, something went really wrong!'
+        }, { idempotencyKey }).then(result => {
+            // console.log(result);
+            return res.status(200).json(result);
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: 'Sorry, something went really wrong!'
+            })
         })
-    })
-
+    });
 }
