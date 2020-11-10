@@ -10,7 +10,7 @@ router.param('userId', getUserById);
 router.param('orderId', getOrderById);
 
 // create
-router.post('/order/create/:userId', isSignedIn, isAuthenticated, pushOrderInPurchaseList, updateStock,createOrder);
+router.post('/order/create/:userId', isSignedIn, isAuthenticated, pushOrderInPurchaseList, updateStock, createOrder);
 
 // read
 router.get('/order/all/:userId', isSignedIn, isAuthenticated, isAdmin, getAllOrders);

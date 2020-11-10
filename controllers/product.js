@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
-const { sortBy } = require('lodash');
+const { sortBy, forEach } = require('lodash');
 
 exports.getProductById = (req, res, next, id) => {
     Product.findById(id)
@@ -146,14 +146,15 @@ exports.updateStock = (req, res, next) => {
     let myOperations = req.body.order.products.map(product => {
         return {
             updateOne: {
-                filter: { _id: product._id }
-            },
-            update: {$inc: {stock: -product.count, sold: +product.count} }
+                filter: { _id: product._id },
+                update: {$inc: {stock: -product.count, sold: +product.count} }
+            }
         }
     });
 
-    Product.bulkWrite(myOperations, {}, (err, products) => {
+    Product.bulkWrite(myOperations, (err, products) => {
         if(err){
+            console.log(err.message);
             return res.status(400).json({ error: 'Bulk operations failed!' });
         }
         next();

@@ -50,4 +50,4 @@ exports.updateOrderStatus = (req, res) => {
             return res.json(order);
         }
     );
-};;
+};
